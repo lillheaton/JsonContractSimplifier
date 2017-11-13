@@ -9,6 +9,6 @@ namespace EOls.Serialization.Services.ConverterLocator
     public interface IConverterLocatorService
     {
         Type[] LoadConverters();
-        bool HaveConverterFor(Type type);
+        bool TryFindConverterFor(Type type, out IConverter converter);
     }
 }

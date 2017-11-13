@@ -46,8 +46,9 @@
     <Compile Include="JsonWriterConverter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\ConverterLocator\ConverterLocatorService.cs" />
+    <Compile Include="Services\ConverterLocator\IConverter.cs" />
+    <Compile Include="Services\ConverterLocator\IObjectConverter.cs" />
     <Compile Include="Services\ConverterLocator\IConverterLocatorService.cs" />
-    <Compile Include="Services\ServiceManager.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

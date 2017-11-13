@@ -8,12 +8,12 @@ namespace EOls.Serialization.Services.ConverterLocator
 {
     public class ConverterLocatorService : IConverterLocatorService
     {
-        public bool HaveConverterFor(Type type)
+        public Type[] LoadConverters()
         {
             throw new NotImplementedException();
         }
 
-        public Type[] LoadConverters()
+        public bool TryFindConverterFor(Type type, out IConverter converter)
         {
             throw new NotImplementedException();
         }

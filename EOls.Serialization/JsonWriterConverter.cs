@@ -1,29 +1,78 @@
-﻿using Newtonsoft.Json;
+﻿using EOls.Serialization.Services.ConverterLocator;
+using Newtonsoft.Json;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace EOls.Serialization
 {
     public class JsonWriterConverter : JsonConverter
     {
-        public override bool CanRead => false;
+        private readonly IConverterLocatorService _converterLocatorService;
 
-        public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
+        public JsonWriterConverter() : 
+            this(new ConverterLocatorService())
         {
-            throw new NotImplementedException();
         }
 
+        public JsonWriterConverter(IConverterLocatorService converterLocatorService)
+        {
+            _converterLocatorService = converterLocatorService;
+        }
+        
+        private static object ConvertObject(IConverter converter, object target)
+        {
+            Type converterType = converter.GetType();
+
+            if (converterType != typeof(IObjectConverter<>))
+            {
+                throw new ArgumentException($"Converter type {converterType.Name} does not implement IObjectConverter");
+            }
+
+            var method = converterType.GetMethod("Convert");
+            return method.Invoke(converter, new[] { target });
+        }
+        
+            
         public override bool CanConvert(Type objectType)
         {
-            return true;
+            return _converterLocatorService.TryFindConverterFor(objectType, out IConverter converter);
         }
 
         public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
         {
-            throw new NotImplementedException();
+            Type targetType = value.GetType();
+
+            if(!_converterLocatorService.TryFindConverterFor(targetType, out IConverter converter))
+            {
+                throw new ArgumentException($"Could not find targetType {targetType.Name}");
+            }
+
+            object result = ConvertObject(converter, value);
+            Type resultType = result.GetType();
+
+            if (resultType.IsValueType || result is string)
+            {
+                writer.WriteValue(resultType);
+                return;
+            }
+
+            if (resultType.IsArray)
+            {
+                writer.WriteStartArray();
+                serializer.Serialize(writer, result);
+                writer.WriteEndArray();
+            }
+
+            if (resultType.IsClass)
+            {
+                writer.WriteStartObject();
+                serializer.Serialize(writer, result);
+                writer.WriteEndObject();
+            }
         }
+
+        #region JsonRead
+        public override bool CanRead => false;
+        public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer) { throw new NotImplementedException(); }
+        #endregion
     }
 }
