@@ -1,6 +1,7 @@
 ﻿using EOls.Serialization.Services.ConverterLocator;
 using Newtonsoft.Json;
 using System;
+using System.Linq;
 
 namespace EOls.Serialization
 {
@@ -17,12 +18,22 @@ namespace EOls.Serialization
         {
             _converterLocatorService = converterLocatorService;
         }
+
+        private static bool ImplementsGenericInterface(object target, Type genericInterfaceType)
+        {
+            return target
+                .GetType()
+                .GetInterfaces()
+                .Any(x =>
+                    x.IsGenericType &&
+                    x.GetGenericTypeDefinition() == genericInterfaceType);
+        }
         
         private static object ConvertObject(IConverter converter, object target)
         {
             Type converterType = converter.GetType();
 
-            if (converterType != typeof(IObjectConverter<>))
+            if (!ImplementsGenericInterface(converter, typeof(IObjectConverter<>)))
             {
                 throw new ArgumentException($"Converter type {converterType.Name} does not implement IObjectConverter");
             }
@@ -51,22 +62,19 @@ namespace EOls.Serialization
 
             if (resultType.IsValueType || result is string)
             {
-                writer.WriteValue(resultType);
-                return;
+                writer.WriteValue(resultType);                
             }
-
-            if (resultType.IsArray)
+            else if (resultType.IsArray)
             {
                 writer.WriteStartArray();
                 serializer.Serialize(writer, result);
-                writer.WriteEndArray();
+                writer.WriteEndArray();                
             }
-
-            if (resultType.IsClass)
+            else if (resultType.IsClass)
             {
-                writer.WriteStartObject();
+                //writer.WriteStartObject();
                 serializer.Serialize(writer, result);
-                writer.WriteEndObject();
+                //writer.WriteEndObject();
             }
         }
 
