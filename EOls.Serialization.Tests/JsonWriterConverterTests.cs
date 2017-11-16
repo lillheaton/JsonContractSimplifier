@@ -14,7 +14,7 @@ namespace EOls.Serialization.Tests
         {
             JsonConvert.DefaultSettings = () => new JsonSerializerSettings
             {
-                Converters = new[] { new JsonWriterConverter() }
+                Converters = new[] { new SimplifyJsonConverter() }
             };            
         }
         

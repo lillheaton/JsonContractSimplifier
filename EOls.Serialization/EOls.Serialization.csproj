@@ -46,7 +46,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="JsonWriterConverter.cs" />
+    <Compile Include="ContractResolver.cs" />
+    <Compile Include="SimplifyJsonConverter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\ConverterLocator\ConverterLocatorService.cs" />
     <Compile Include="Services\ConverterLocator\IConverter.cs" />

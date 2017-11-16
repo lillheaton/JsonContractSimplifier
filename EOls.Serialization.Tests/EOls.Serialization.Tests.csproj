@@ -55,10 +55,12 @@
       <HintPath>..\packages\Newtonsoft.Json.10.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ContractResolverTests.cs" />
     <Compile Include="Converters\CarConverter.cs" />
     <Compile Include="JsonWriterConverterTests.cs" />
     <Compile Include="Models\Cars.cs" />

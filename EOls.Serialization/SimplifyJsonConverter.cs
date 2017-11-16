@@ -5,16 +5,16 @@ using System.Linq;
 
 namespace EOls.Serialization
 {
-    public class JsonWriterConverter : JsonConverter
+    public class SimplifyJsonConverter : JsonConverter
     {
         private readonly IConverterLocatorService _converterLocatorService;
 
-        public JsonWriterConverter() : 
+        public SimplifyJsonConverter() : 
             this(new ConverterLocatorService())
         {
         }
 
-        public JsonWriterConverter(IConverterLocatorService converterLocatorService)
+        public SimplifyJsonConverter(IConverterLocatorService converterLocatorService)
         {
             _converterLocatorService = converterLocatorService;
         }
@@ -72,9 +72,7 @@ namespace EOls.Serialization
             }
             else if (resultType.IsClass)
             {
-                //writer.WriteStartObject();
-                serializer.Serialize(writer, result);
-                //writer.WriteEndObject();
+                serializer.Serialize(writer, result);                
             }
         }
 
