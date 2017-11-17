@@ -1,6 +1,10 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using EOls.Serialization.Attributes;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Newtonsoft.Json;
+using System;
 using System.ComponentModel.DataAnnotations;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace EOls.Serialization.Tests
 {
@@ -38,6 +42,28 @@ namespace EOls.Serialization.Tests
             Assert.IsNotNull(obj.bar);
         }
 
+        [TestMethod]
+        public void ContractResolver_CacheAttribute_Should_Cache_Property()
+        {
+            var target = DateTime.Now.AddDays(-1);
+            var model = new Foo();
+            var settings = new JsonSerializerSettings
+            {
+                ContractResolver = new ContractResolver()
+            };
+
+            var json1 = JsonConvert.SerializeObject(model, settings);
+            var obj1 = JsonConvert.DeserializeObject<dynamic>(json1);
+
+            Thread.Sleep(1000);
+
+            var json2 = JsonConvert.SerializeObject(model, settings);
+            var obj2 = JsonConvert.DeserializeObject<dynamic>(json2);
+
+            Assert.AreNotEqual(obj1.noCacheDate, obj2.noCacheDate);
+            Assert.AreEqual(obj1.cacheDate, obj2.cacheDate);
+        }
+
         [JsonObject(MemberSerialization.OptIn)]
         internal class Foo
         {
@@ -46,6 +72,13 @@ namespace EOls.Serialization.Tests
 
             [JsonProperty]
             public string Test { get; set; }
+
+            [JsonProperty]
+            public DateTime NoCacheDate { get => DateTime.Now; }
+
+            [Cache("00:01")]
+            [JsonProperty]
+            public DateTime CacheDate { get => DateTime.Now; }
         }
     }
 }

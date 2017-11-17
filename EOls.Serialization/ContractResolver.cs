@@ -1,18 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Reflection;
+﻿using EOls.Serialization.Attributes;
+using EOls.Serialization.ValueProviders;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
+using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 
 namespace EOls.Serialization
 {
-
-    //https://www.newtonsoft.com/json/help/html/Performance.htm
-    //https://www.newtonsoft.com/json/help/html/CustomContractResolver.htm
-    //https://stackoverflow.com/questions/39816736/json-net-custom-valueprovider-to-convert-objects-into-guid
-    //https://stackoverflow.com/questions/33148957/replace-sensitive-data-value-on-json-serialization
-
     public class ContractResolver : DefaultContractResolver
     {
         public Type[] ExtraOptInAttributes { get; set; }
@@ -26,28 +22,38 @@ namespace EOls.Serialization
             };
         }
 
-        private bool ShouldIgnore(JsonProperty prop, MemberSerialization memberSerialization)
+        private bool ShouldIgnore(JsonProperty jsonProperty, MemberSerialization memberSerialization)
         {
             if (ExtraOptInAttributes == null)
-                return prop.Ignored;
+                return jsonProperty.Ignored;
 
             if (memberSerialization == MemberSerialization.OptIn)
             {
-                return prop.AttributeProvider
+                return jsonProperty.AttributeProvider
                     .GetAttributes(false)
                     .Any(attr => 
                         ExtraOptInAttributes
                         .Any(x => attr.Equals(x)));
             }
 
-            return prop.Ignored;
+            return jsonProperty.Ignored;
+        }
+
+        private IValueProvider GetValueProvider(JsonProperty jsonProperty, MemberInfo memberInfo)
+        {
+            var cacheAttribute = memberInfo.GetCustomAttribute<CacheAttribute>(false);
+            if (cacheAttribute != null)
+                return new CacheValueProvider(memberInfo, jsonProperty.ValueProvider);
+
+            return jsonProperty.ValueProvider;
         }
 
         protected override JsonProperty CreateProperty(MemberInfo member, MemberSerialization memberSerialization)
         {
-            var prop = base.CreateProperty(member, memberSerialization);
-            prop.Ignored = ShouldIgnore(prop, memberSerialization);
-            return prop;
+            var jsonProperty = base.CreateProperty(member, memberSerialization);
+            jsonProperty.Ignored = ShouldIgnore(jsonProperty, memberSerialization);
+            jsonProperty.ValueProvider = GetValueProvider(jsonProperty, member);
+            return jsonProperty;
         }
 
         protected override IList<JsonProperty> CreateProperties(Type type, MemberSerialization memberSerialization)
