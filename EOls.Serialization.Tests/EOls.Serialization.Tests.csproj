@@ -62,8 +62,12 @@
   <ItemGroup>
     <Compile Include="ContractResolverTests.cs" />
     <Compile Include="Converters\CarConverter.cs" />
+    <Compile Include="Converters\ModelAConverter.cs" />
+    <Compile Include="Converters\ModelBConverter.cs" />
     <Compile Include="JsonWriterConverterTests.cs" />
     <Compile Include="Models\Cars.cs" />
+    <Compile Include="Models\ModelA.cs" />
+    <Compile Include="Models\ModelB.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

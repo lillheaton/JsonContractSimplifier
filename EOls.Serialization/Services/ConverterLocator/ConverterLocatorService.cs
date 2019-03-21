@@ -19,6 +19,19 @@ namespace EOls.Serialization.Services.ConverterLocator
                 .ToArray();
         }
 
+        public object Convert(object target, IConverter converter)
+        {
+            Type converterType = converter.GetType();
+
+            if (!converterType.ImplementsGenericInterface(typeof(IObjectConverter<>)))
+            {
+                throw new ArgumentException($"Converter type {converterType.Name} does not implement IObjectConverter");
+            }
+
+            var method = converterType.GetMethod("Convert");
+            return method.Invoke(converter, new[] { target });
+        }
+
         public Type[] LoadConverters()
         {
             return ReflectionService

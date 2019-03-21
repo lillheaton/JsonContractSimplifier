@@ -1,6 +1,7 @@
 ﻿using EOls.Serialization.Tests.Models;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Newtonsoft.Json;
+using System.Collections.Generic;
 
 namespace EOls.Serialization.Tests
 {
@@ -15,9 +16,9 @@ namespace EOls.Serialization.Tests
             JsonConvert.DefaultSettings = () => new JsonSerializerSettings
             {
                 Converters = new[] { new SimplifyJsonConverter() }
-            };            
+            };
         }
-        
+
         [TestInitialize]
         public void TestInitialize()
         {
@@ -64,6 +65,73 @@ namespace EOls.Serialization.Tests
             var obj = JsonConvert.DeserializeObject<dynamic>(json);
 
             Assert.AreEqual("foo", obj.Cars[0].B.ToString());
+        }
+
+        [TestMethod]
+        public void Should_Be_Able_To_Handle_Dictionaries()
+        {
+            var json = JsonConvert.SerializeObject(new
+            {
+                DictTest1 = new Dictionary<string, object>
+                {
+                    { "A", new { DictTest1Foo = "foo" } }
+                },
+                DictTest2 = new Dictionary<string, object>
+                {
+                    { "B", new ModelA { Foo = "will get removed" } }
+                }
+            });
+
+            var obj = JsonConvert.DeserializeObject<dynamic>(json);
+            Assert.AreEqual("Converted", obj.DictTest2.B.ToString());
+        }
+
+        [TestMethod]
+        public void Should_Be_Able_To_Handle_KeyValuePair()
+        {
+            var json = JsonConvert.SerializeObject(new
+            {
+                DictTest1 = new Dictionary<string, object>
+                {
+                    { "A", new { DictTest1Foo = "foo" } }
+                },
+                DictTest2 = new Dictionary<string, object>
+                {
+                    { "B", new KeyValuePair<string, object>("Test", new ModelA { Foo = "will get removed" }) }
+                }
+            });
+            
+            var obj = JsonConvert.DeserializeObject<dynamic>(json);
+            Assert.AreEqual("Converted", obj.DictTest2.B.Value.ToString());
+        }
+
+        [TestMethod]
+        public void Should_Be_Able_To_Handle_IEnumerable()
+        {
+            var json = JsonConvert.SerializeObject(new
+            {
+                Enumerable = new Dictionary<string, object>
+                {
+                    { "A", new { Test = new List<ModelA> { new ModelA { Foo = "will get removed" } } } }
+                }
+            });
+
+            var obj = JsonConvert.DeserializeObject<dynamic>(json);
+            Assert.AreEqual("Converted", obj.Enumerable.A.Test[0].ToString());
+        }
+
+        [TestMethod]
+        public void Should_Deep_Transform()
+        {
+            var json = JsonConvert.SerializeObject(new
+            {
+                Test = new ModelB { Bar = "Should be converted to ModelA then to string" },
+                Test2 = new [] { new ModelB { Bar = "Should be converted" } }
+            });
+
+            var obj = JsonConvert.DeserializeObject<dynamic>(json);
+            Assert.AreEqual("Converted", obj.Test.ToString());
+            Assert.AreEqual("Converted", obj.Test2[0].ToString());
         }
     }
 }

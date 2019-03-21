@@ -3,11 +3,11 @@ using EOls.Serialization.Tests.Models;
 
 namespace EOls.Serialization.Tests.Converters
 {
-    public class CarConverter : IObjectConverter<Car>
+    public class ModelAConverter : IObjectConverter<ModelA>
     {
-        public object Convert(Car target)
+        public object Convert(ModelA target)
         {
-            return new Volvo(target) { A = "foo", C = "bar" };            
+            return "Converted";
         }
     }
 }

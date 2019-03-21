@@ -49,6 +49,7 @@
   <ItemGroup>
     <Compile Include="Attributes\CacheAttribute.cs" />
     <Compile Include="ContractResolver.cs" />
+    <Compile Include="Extensions\TypeEx.cs" />
     <Compile Include="Services\Cache\CacheService.cs" />
     <Compile Include="Services\Cache\ICacheService.cs" />
     <Compile Include="SimplifyJsonConverter.cs" />

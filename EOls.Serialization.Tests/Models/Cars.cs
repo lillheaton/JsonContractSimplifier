@@ -9,7 +9,7 @@ namespace EOls.Serialization.Tests.Models
 {
     public class CarCompany
     {
-        public Car[] Cars { get; set; }
+        public Car[] Cars { get; set; }        
     }
 
     public class Car

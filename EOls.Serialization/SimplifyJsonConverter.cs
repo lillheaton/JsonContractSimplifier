@@ -1,7 +1,7 @@
 ﻿using EOls.Serialization.Services.ConverterLocator;
 using Newtonsoft.Json;
 using System;
-using System.Linq;
+using System.Collections;
 
 namespace EOls.Serialization
 {
@@ -9,42 +9,18 @@ namespace EOls.Serialization
     {
         private readonly IConverterLocatorService _converterLocatorService;
 
-        public SimplifyJsonConverter() : 
-            this(new ConverterLocatorService())
-        {
-        }
-
         public SimplifyJsonConverter(IConverterLocatorService converterLocatorService)
         {
             _converterLocatorService = converterLocatorService;
         }
 
-        private static bool ImplementsGenericInterface(object target, Type genericInterfaceType)
+        public SimplifyJsonConverter() :
+            this(new ConverterLocatorService())
         {
-            return target
-                .GetType()
-                .GetInterfaces()
-                .Any(x =>
-                    x.IsGenericType &&
-                    x.GetGenericTypeDefinition() == genericInterfaceType);
-        }
-        
-        private static object ConvertObject(IConverter converter, object target)
-        {
-            Type converterType = converter.GetType();
-
-            if (!ImplementsGenericInterface(converter, typeof(IObjectConverter<>)))
-            {
-                throw new ArgumentException($"Converter type {converterType.Name} does not implement IObjectConverter");
-            }
-
-            var method = converterType.GetMethod("Convert");
-            return method.Invoke(converter, new[] { target });
-        }
-        
+        }        
             
         public override bool CanConvert(Type objectType)
-        {
+        {            
             return _converterLocatorService.TryFindConverterFor(objectType, out IConverter converter);
         }
 
@@ -57,23 +33,30 @@ namespace EOls.Serialization
                 throw new ArgumentException($"Could not find targetType {targetType.Name}");
             }
 
-            object result = ConvertObject(converter, value);
+            object result = _converterLocatorService.Convert(value, converter);
             Type resultType = result.GetType();
 
-            if (resultType.IsValueType || result is string)
+            switch (resultType)
             {
-                writer.WriteValue(resultType);                
-            }
-            else if (resultType.IsArray)
-            {
-                writer.WriteStartArray();
-                serializer.Serialize(writer, result);
-                writer.WriteEndArray();                
-            }
-            else if (resultType.IsClass)
-            {
-                serializer.Serialize(writer, result);                
-            }
+                case object _ when resultType.IsValueType || resultType == typeof(string):
+                    writer.WriteValue(result);
+                    break;
+
+                case IEnumerable enumerable
+                when targetType.IsArray || (targetType.IsGenericType && result is IEnumerable):
+                    writer.WriteStartArray();
+                    serializer.Serialize(writer, enumerable);
+                    writer.WriteEndArray();
+                    break;
+
+                case object _ when resultType.IsClass:
+                    serializer.Serialize(writer, result);
+                    break;
+
+                default:
+                    serializer.Serialize(writer, result);                    
+                    break;
+            }            
         }
 
         #region JsonRead
