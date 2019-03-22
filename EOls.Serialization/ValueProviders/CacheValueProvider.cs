@@ -12,23 +12,16 @@ namespace EOls.Serialization.ValueProviders
         private readonly MemberInfo _memberInfo;
         private readonly IValueProvider _innerValueProvider;
         private readonly ICacheService _cacheService;
-
-        public CacheValueProvider(MemberInfo memberInfo, IValueProvider valueProvider) : this(
-            memberInfo,
-            valueProvider,
-            new CacheService())
-        {
-        }
-
+        
         public CacheValueProvider(
-            MemberInfo memberInfo, 
+            MemberInfo memberInfo,
             IValueProvider valueProvider,
             ICacheService cacheService)
         {
             _memberInfo = memberInfo;
             _innerValueProvider = valueProvider;
             _cacheService = cacheService;
-        }
+        }        
 
         private string GetCacheKey() =>
             string.Format(CACHE_KEY, $"{_memberInfo.DeclaringType.ToString()}_{_memberInfo.Name}");
@@ -38,12 +31,12 @@ namespace EOls.Serialization.ValueProviders
             var prop = target.GetType().GetProperty(_memberInfo.Name);
             var cacheAttribute = prop.GetCustomAttribute<CacheAttribute>();
 
-            if(cacheAttribute == null)
+            if (cacheAttribute == null)
                 return _innerValueProvider.GetValue(target);
 
             return _cacheService.HandleCache<object>(
-                GetCacheKey(), 
-                cacheAttribute.CacheTime, 
+                GetCacheKey(),
+                cacheAttribute.CacheTime,
                 () =>
                 {
                     return _innerValueProvider.GetValue(target);

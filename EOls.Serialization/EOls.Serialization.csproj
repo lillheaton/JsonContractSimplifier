@@ -52,7 +52,7 @@
     <Compile Include="Extensions\TypeEx.cs" />
     <Compile Include="Services\Cache\CacheService.cs" />
     <Compile Include="Services\Cache\ICacheService.cs" />
-    <Compile Include="SimplifyJsonConverter.cs" />
+    <Compile Include="TargetsJsonConverter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\ConverterLocator\ConverterLocatorService.cs" />
     <Compile Include="Services\ConverterLocator\IConverter.cs" />

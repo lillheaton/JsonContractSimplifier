@@ -5,16 +5,16 @@ using System.Collections;
 
 namespace EOls.Serialization
 {
-    public class SimplifyJsonConverter : JsonConverter
+    public class TargetsJsonConverter : JsonConverter
     {
         private readonly IConverterLocatorService _converterLocatorService;
 
-        public SimplifyJsonConverter(IConverterLocatorService converterLocatorService)
+        public TargetsJsonConverter(IConverterLocatorService converterLocatorService)
         {
             _converterLocatorService = converterLocatorService;
         }
 
-        public SimplifyJsonConverter() :
+        public TargetsJsonConverter() :
             this(new ConverterLocatorService())
         {
         }        

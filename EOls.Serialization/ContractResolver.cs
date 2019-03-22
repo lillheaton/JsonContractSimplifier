@@ -1,4 +1,5 @@
 ﻿using EOls.Serialization.Attributes;
+using EOls.Serialization.Services.Cache;
 using EOls.Serialization.ValueProviders;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
@@ -11,10 +12,14 @@ namespace EOls.Serialization
 {
     public class ContractResolver : DefaultContractResolver
     {
+        private readonly ICacheService _cacheService;
+
         public Type[] ExtraOptInAttributes { get; set; }
 
-        public ContractResolver()
+        public ContractResolver(ICacheService cacheService)
         {
+            _cacheService = cacheService;
+
             this.NamingStrategy = new CamelCaseNamingStrategy
             {
                 ProcessDictionaryKeys = true,
@@ -22,7 +27,12 @@ namespace EOls.Serialization
             };
         }
 
-        private bool ShouldIgnore(JsonProperty jsonProperty, MemberSerialization memberSerialization)
+        public ContractResolver() : this(
+            new CacheService())
+        {
+        }
+
+        protected virtual bool ShouldIgnore(JsonProperty jsonProperty, MemberSerialization memberSerialization)
         {
             if (ExtraOptInAttributes == null)
                 return jsonProperty.Ignored;
@@ -43,7 +53,7 @@ namespace EOls.Serialization
         {
             var cacheAttribute = memberInfo.GetCustomAttribute<CacheAttribute>(false);
             if (cacheAttribute != null)
-                return new CacheValueProvider(memberInfo, jsonProperty.ValueProvider);
+                return new CacheValueProvider(memberInfo, jsonProperty.ValueProvider, _cacheService);
 
             return jsonProperty.ValueProvider;
         }

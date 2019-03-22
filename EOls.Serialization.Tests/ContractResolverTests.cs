@@ -4,7 +4,6 @@ using Newtonsoft.Json;
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.Threading;
-using System.Threading.Tasks;
 
 namespace EOls.Serialization.Tests
 {

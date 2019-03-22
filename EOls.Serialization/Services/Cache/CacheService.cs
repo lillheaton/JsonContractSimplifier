@@ -1,10 +1,23 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Runtime.Caching;
 
 namespace EOls.Serialization.Services.Cache
 {
     public class CacheService : ICacheService
     {
+        private static readonly Dictionary<string, bool> CacheKeys = new Dictionary<string, bool>();
+
+        public void ClearAll()
+        {
+            foreach(string key in CacheKeys.Keys)
+            {
+                MemoryCache.Default.Remove(key);
+            }
+
+            CacheKeys.Clear();
+        }
+
         public T HandleCache<T>(string key, Func<T> func)
         {
             return HandleCache(key, TimeSpan.FromMinutes(10), func);
@@ -25,6 +38,7 @@ namespace EOls.Serialization.Services.Cache
 
         public void Set(string key, object value, TimeSpan timeSpan)
         {
+            CacheKeys[key] = true;
             MemoryCache.Default.Set(
                 key,
                 value,

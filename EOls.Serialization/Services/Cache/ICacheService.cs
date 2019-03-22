@@ -9,5 +9,7 @@ namespace EOls.Serialization.Services.Cache
 
         T HandleCache<T>(string key, Func<T> func);
         T HandleCache<T>(string key, TimeSpan timeSpan, Func<T> func);
+
+        void ClearAll();
     }
 }
