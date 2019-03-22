@@ -28,7 +28,7 @@ namespace EOls.Serialization
         }
 
         public ContractResolver() : this(
-            new CacheService())
+            new NotImplementedCache())
         {
         }
 

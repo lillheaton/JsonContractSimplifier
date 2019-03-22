@@ -1,4 +1,5 @@
 ﻿using EOls.Serialization.Attributes;
+using EOls.Serialization.Tests.Services;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Newtonsoft.Json;
 using System;
@@ -17,7 +18,7 @@ namespace EOls.Serialization.Tests
 
             var json = JsonConvert.SerializeObject(model, new JsonSerializerSettings
             {
-                ContractResolver = new ContractResolver()
+                ContractResolver = new ContractResolver(new TestCacheService())
             });
             var obj = JsonConvert.DeserializeObject<dynamic>(json);
 
@@ -31,7 +32,7 @@ namespace EOls.Serialization.Tests
 
             var json = JsonConvert.SerializeObject(model, new JsonSerializerSettings
             {
-                ContractResolver = new ContractResolver()
+                ContractResolver = new ContractResolver(new TestCacheService())
                 {
                     ExtraOptInAttributes = new[] { typeof(DisplayAttribute) }
                 }
@@ -48,7 +49,7 @@ namespace EOls.Serialization.Tests
             var model = new Foo();
             var settings = new JsonSerializerSettings
             {
-                ContractResolver = new ContractResolver()
+                ContractResolver = new ContractResolver(new TestCacheService())
             };
 
             var json1 = JsonConvert.SerializeObject(model, settings);
