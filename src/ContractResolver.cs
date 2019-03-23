@@ -15,6 +15,7 @@ namespace EOls.Serialization
         private readonly ICacheService _cacheService;
 
         public Type[] ExtraOptInAttributes { get; set; }
+        public bool ShouldCache { get; set; } = true;
 
         public ContractResolver(ICacheService cacheService)
         {
@@ -32,7 +33,7 @@ namespace EOls.Serialization
         {
         }
 
-        protected virtual bool ShouldIgnore(JsonProperty jsonProperty, MemberSerialization memberSerialization)
+        protected virtual bool ShouldIgnore(JsonProperty jsonProperty, MemberInfo member, MemberSerialization memberSerialization)
         {
             if (ExtraOptInAttributes == null)
                 return jsonProperty.Ignored;
@@ -51,6 +52,9 @@ namespace EOls.Serialization
 
         private IValueProvider GetValueProvider(JsonProperty jsonProperty, MemberInfo memberInfo)
         {
+            if(!ShouldCache)
+                return jsonProperty.ValueProvider;
+
             var cacheAttribute = memberInfo.GetCustomAttribute<CacheAttribute>(false);
             if (cacheAttribute != null)
                 return new CacheValueProvider(memberInfo, jsonProperty.ValueProvider, _cacheService);
@@ -61,7 +65,7 @@ namespace EOls.Serialization
         protected override JsonProperty CreateProperty(MemberInfo member, MemberSerialization memberSerialization)
         {
             var jsonProperty = base.CreateProperty(member, memberSerialization);
-            jsonProperty.Ignored = ShouldIgnore(jsonProperty, memberSerialization);
+            jsonProperty.Ignored = ShouldIgnore(jsonProperty, member, memberSerialization);
             jsonProperty.ValueProvider = GetValueProvider(jsonProperty, member);
             return jsonProperty;
         }

@@ -32,7 +32,7 @@ namespace EOls.Serialization.ValueProviders
             var cacheAttribute = prop.GetCustomAttribute<CacheAttribute>();
 
             if (cacheAttribute == null)
-                return _innerValueProvider.GetValue(target);
+                return _innerValueProvider.GetValue(target);            
 
             return _cacheService.HandleCache<object>(
                 GetCacheKey(),
