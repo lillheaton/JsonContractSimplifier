@@ -1,3 +1,7 @@
+[![Build status](https://ci.appveyor.com/api/projects/status/0o92jsl3gutgi2lu?svg=true)](https://ci.appveyor.com/project/lillheaton/eols-serialization)
+[![NuGet](https://img.shields.io/nuget/v/EOls.Serialization.svg)](https://www.nuget.org/packages/EOls.Serialization/)
+
+
 # Eols.Serialization
 A shorthand tool built on top of Newtonsoft [Json.NET](https://www.newtonsoft.com/json) that allows you to transform specific types during serialization. 
 It builds on top of the default JsonConverter as well as the DefaultContractResolver.
