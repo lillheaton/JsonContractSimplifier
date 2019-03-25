@@ -1,0 +1,31 @@
+{
+  "name": "EOls.Serialization",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "git@github.com:lillheaton/EOls.Serialization.git",
+  "author": "Emil Olsson",
+  "license": "MIT",
+  "homepage": "https://github.com/lillheaton/EOls.Serialization",
+  "scripts": {
+    "build:release": "set CONFIGURATION=Release&& babel-node tools/build.js",
+    "build:ci": "set CONFIGURATION=Release&& babel-node tools/build.js ci",
+    "release": "set CONFIGURATION=Release&& babel-node tools/build.js ci"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.1.5",
+    "@babel/core": "^7.1.6",
+    "@babel/node": "^7.0.0",
+    "@babel/plugin-proposal-object-rest-spread": "^7.0.0",
+    "@babel/preset-env": "^7.1.6",
+    "chalk": "^2.4.1",
+    "child-process-promise": "^2.2.1",
+    "cross-env": "^5.2.0",
+    "moment": "^2.22.2",
+    "prettier": "^1.15.2",
+    "shelljs": "^0.8.3",
+    "simple-make": "^2.0.0",
+    "stylelint": "^9.7.1",
+    "stylelint-config-prettier": "^4.0.0",
+    "stylelint-config-standard": "^18.2.0"
+  }
+}
