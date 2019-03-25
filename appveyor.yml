@@ -1,4 +1,4 @@
-version: 0.5.0.{build}
+version: 1.0.0.{build}
 pull_requests:
   do_not_increment_build_number: true
 skip_tags: true
@@ -24,7 +24,7 @@ install:
 
 build_script:
 - cmd: >-
-    npm build:ci
+    npm run build:ci
 artifacts:
   - path: 'artifacts\*.nupkg'
 
