@@ -1,7 +1,19 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
+    <Description>A shorthand tool built on top of Newtonsoft Json.NET</Description>
+    <Authors>Emil Olsson</Authors>
+    <PackageId>EOls.Serialization</PackageId>
+    <PackageTags>json,serialization</PackageTags>
+    <PackageProjectUrl>https://github.com/lillheaton/EOls.Serialization</PackageProjectUrl>
+    <PackageLicenseUrl>https://github.com/lillheaton/EOls.Serialization/blob/master/License.md</PackageLicenseUrl>
     <TargetFramework>netstandard2.0</TargetFramework>
+    <GenerateAssemblyDescriptionAttribute>false</GenerateAssemblyDescriptionAttribute>
+    <GenerateAssemblyTitleAttribute>false</GenerateAssemblyTitleAttribute>
+    <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
+    <GenerateAssemblyCopyrightAttribute>false</GenerateAssemblyCopyrightAttribute>    
+    <GenerateAssemblyFileVersionAttribute>false</GenerateAssemblyFileVersionAttribute>
+    <GenerateAssemblyInformationalVersionAttribute>false</GenerateAssemblyInformationalVersionAttribute>
   </PropertyGroup>
 
   <ItemGroup>
