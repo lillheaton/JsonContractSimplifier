@@ -32,7 +32,7 @@ namespace EOls.Serialization.Services.ConverterLocator
             return method.Invoke(converter, new[] { target });
         }
 
-        public Type[] LoadConverters()
+        public virtual Type[] LoadConverters()
         {
             return ReflectionService
                 .GetAssemblyClassesInheritGenericInterface(
