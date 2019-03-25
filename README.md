@@ -12,6 +12,7 @@ It builds on top of the default JsonConverter as well as the DefaultContractReso
 ### Usage
 
 ##### Setup
+
 ```C#
 var json = JsonConvert.SerializeObject(yourObject, new JsonSerializerSettings
 {
@@ -22,6 +23,8 @@ var json = JsonConvert.SerializeObject(yourObject, new JsonSerializerSettings
 ```
 
 ##### Converter
+If you have a specific type you want to convert you can create a IObjectConverter<>. During serialization it will find all classes in the current AppDomain assemblies and try to find a matching target type.
+
 ```C#
 public class AppleConverter : IObjectConverter<Apple>
 {
@@ -34,13 +37,11 @@ public class AppleConverter : IObjectConverter<Apple>
 ```
 
 ##### Cache
-TODO - more info
-
-During serialization - by using the contract resolver, we create a new value provider based on the property attribute.
-This attribute allows you to cache that specific property in X time.
+During serialization - by using the contract resolver, we create a new value provider based on if the property is decorated with the "Cache attribute".
+This attribute allows you to cache that specific property for X time.
 
 ```C#
-internal class Foo
+public class Foo
 {
     [Cache("00:01")]    
     public DateTime CacheDate { get => DateTime.Now; }
@@ -48,4 +49,18 @@ internal class Foo
 
 ```
 
-To be able to cache you need to implement ICacheService and pass to the contract resolver.
+<b>Note!</b> To be able to cache you need to implement <b>ICacheService</b> and pass to the contract resolver.
+Once you have implemented the ICacheService you can pass it to the ContractResolver and set ShouldCache = true.
+
+##### Attributes
+Json.NET allow you to decorate a class with [JsonObject(MemberSerialization.OptIn)] to specify that only properties that have been explicitly specified with JsonPropertyAttribute should be serialized.
+
+This tool allows you to extend this feature by adding more attributes that will also be optIn attributes.
+
+```C#
+new ContractResolver(new YourCacheService())
+{
+    ExtraOptInAttributes = new[] { typeof(YourAttribute) } // If property is decorated with YourAttribute it will serialize this as well.
+}
+
+```
