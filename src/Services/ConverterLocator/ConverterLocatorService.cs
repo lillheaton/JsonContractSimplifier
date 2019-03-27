@@ -6,7 +6,7 @@ namespace EOls.Serialization.Services.ConverterLocator
 {
     public class ConverterLocatorService : IConverterLocatorService
     {
-        private readonly (IConverter Converter, Type Target)[] _converters;
+        protected readonly (IConverter Converter, Type Target)[] _converters;
         
         public ConverterLocatorService()
         {
