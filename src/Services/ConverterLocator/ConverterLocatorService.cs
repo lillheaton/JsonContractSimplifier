@@ -19,7 +19,7 @@ namespace EOls.Serialization.Services.ConverterLocator
                 .ToArray();
         }
 
-        public object Convert(object target, IConverter converter)
+        public virtual object Convert(object target, IConverter converter)
         {
             Type converterType = converter.GetType();
 
@@ -41,7 +41,7 @@ namespace EOls.Serialization.Services.ConverterLocator
                 .ToArray();
         }
 
-        public bool TryFindConverterFor(Type type, out IConverter converter)
+        public virtual bool TryFindConverterFor(Type type, out IConverter converter)
         {
             bool exist = _converters.Any(x => x.Target == type);
 
