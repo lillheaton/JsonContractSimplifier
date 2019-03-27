@@ -38,13 +38,13 @@ namespace EOls.Serialization
             if (ExtraOptInAttributes == null)
                 return jsonProperty.Ignored;
 
-            if (memberSerialization == MemberSerialization.OptIn)
-            {
-                return jsonProperty.AttributeProvider
+            if (memberSerialization == MemberSerialization.OptIn && jsonProperty.Ignored)
+            {                
+                return !jsonProperty.AttributeProvider
                     .GetAttributes(false)
                     .Any(attr => 
-                        ExtraOptInAttributes
-                        .Any(x => attr.Equals(x)));
+                        ExtraOptInAttributes.Any(x => attr.GetType().Equals(x))
+                    );
             }
 
             return jsonProperty.Ignored;

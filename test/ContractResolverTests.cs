@@ -2,6 +2,7 @@
 using EOls.Serialization.Tests.Services;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.Threading;
@@ -28,7 +29,7 @@ namespace EOls.Serialization.Tests
         [TestMethod]
         public void ContractResolver_With_Custom_OptIn_Attributes_Should_Not_Be_Null()
         {
-            var model = new Foo { Bar = "bar", Test = "test" };
+            var model = new Bar { Foo = "foo", Foobar = "test", Ignored = "ignored" };
 
             var json = JsonConvert.SerializeObject(model, new JsonSerializerSettings
             {
@@ -37,9 +38,10 @@ namespace EOls.Serialization.Tests
                     ExtraOptInAttributes = new[] { typeof(DisplayAttribute) }
                 }
             });
-            var obj = JsonConvert.DeserializeObject<dynamic>(json);
-
-            Assert.IsNotNull(obj.bar);
+            var obj = JsonConvert.DeserializeObject<JObject>(json);
+            
+            Assert.IsNotNull(obj["foo"]);
+            Assert.IsTrue(obj["ignored"] == null);
         }
 
         [TestMethod]
@@ -79,6 +81,18 @@ namespace EOls.Serialization.Tests
             [Cache("00:01")]
             [JsonProperty]
             public DateTime CacheDate { get => DateTime.Now; }
+        }
+
+        [JsonObject(MemberSerialization.OptIn)]
+        internal class Bar
+        {
+            [Display]
+            public string Foo { get; set; }
+
+            [JsonProperty]
+            public string Foobar { get; set; }
+            
+            public string Ignored { get; set; }            
         }
     }
 }
