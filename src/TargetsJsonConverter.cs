@@ -7,33 +7,25 @@ namespace EOls.Serialization
 {
     public class TargetsJsonConverter : JsonConverter
     {
+        private readonly IConverter _converter;
         private readonly IConverterLocatorService _converterLocatorService;
 
-        public TargetsJsonConverter(IConverterLocatorService converterLocatorService)
+        public TargetsJsonConverter(IConverter converter, IConverterLocatorService converterLocatorService)
         {
+            _converter = converter;
             _converterLocatorService = converterLocatorService;
-        }
-
-        public TargetsJsonConverter() :
-            this(new ConverterLocatorService())
-        {
         }        
             
         public override bool CanConvert(Type objectType)
-        {            
-            return _converterLocatorService.TryFindConverterFor(objectType, out IConverter converter);
+        {
+            var converterType = _converter.GetType();
+            return converterType.GetGenericArguments()[0] == objectType;
         }
 
         public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
         {
-            Type targetType = value.GetType();
-
-            if(!_converterLocatorService.TryFindConverterFor(targetType, out IConverter converter))
-            {
-                throw new ArgumentException($"Could not find targetType {targetType.Name}");
-            }
-
-            object result = _converterLocatorService.Convert(value, converter);
+            Type targetType = value.GetType();            
+            object result = _converterLocatorService.Convert(value, _converter);
             Type resultType = result.GetType();
 
             switch (resultType)

@@ -1,5 +1,6 @@
 ﻿using EOls.Serialization.Attributes;
 using EOls.Serialization.Services.Cache;
+using EOls.Serialization.Services.ConverterLocator;
 using EOls.Serialization.ValueProviders;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
@@ -13,13 +14,17 @@ namespace EOls.Serialization
     public class ContractResolver : DefaultContractResolver
     {
         private readonly ICacheService _cacheService;
+        private readonly IConverterLocatorService _converterLocatorService;
 
         public Type[] ExtraOptInAttributes { get; set; }
         public bool ShouldCache { get; set; } = true;
 
-        public ContractResolver(ICacheService cacheService)
+        public ContractResolver(
+            IConverterLocatorService converterLocatorService, 
+            ICacheService cacheService)
         {
             _cacheService = cacheService;
+            _converterLocatorService = converterLocatorService;
 
             this.NamingStrategy = new CamelCaseNamingStrategy
             {
@@ -28,9 +33,41 @@ namespace EOls.Serialization
             };
         }
 
+        public ContractResolver(ICacheService cacheService) : this(
+            new ConverterLocatorService(),
+            cacheService)
+        {
+        }
+
         public ContractResolver() : this(
+            new ConverterLocatorService(), 
             new NotImplementedCache())
         {
+        }
+
+        private IValueProvider GetValueProvider(JsonProperty jsonProperty, MemberInfo memberInfo)
+        {
+            if (!ShouldCache)
+                return jsonProperty.ValueProvider;
+
+            var cacheAttribute = memberInfo.GetCustomAttribute<CacheAttribute>(false);
+            if (cacheAttribute != null)
+                return new CacheValueProvider(memberInfo, jsonProperty.ValueProvider, _cacheService);
+
+            return jsonProperty.ValueProvider;
+        }
+
+        protected override JsonContract CreateContract(Type objectType)
+        {
+            var contact = base.CreateContract(objectType);
+
+            // this will only be called once and then cached        
+            if (_converterLocatorService.TryFindConverterFor(objectType, out IConverter converter))
+            {
+                contact.Converter = new TargetsJsonConverter(converter, _converterLocatorService);
+            }
+
+            return contact;
         }
 
         protected virtual bool ShouldIgnore(JsonProperty jsonProperty, MemberInfo member, MemberSerialization memberSerialization)
@@ -49,19 +86,7 @@ namespace EOls.Serialization
 
             return jsonProperty.Ignored;
         }
-
-        private IValueProvider GetValueProvider(JsonProperty jsonProperty, MemberInfo memberInfo)
-        {
-            if(!ShouldCache)
-                return jsonProperty.ValueProvider;
-
-            var cacheAttribute = memberInfo.GetCustomAttribute<CacheAttribute>(false);
-            if (cacheAttribute != null)
-                return new CacheValueProvider(memberInfo, jsonProperty.ValueProvider, _cacheService);
-
-            return jsonProperty.ValueProvider;
-        }
-
+        
         protected override JsonProperty CreateProperty(MemberInfo member, MemberSerialization memberSerialization)
         {
             var jsonProperty = base.CreateProperty(member, memberSerialization);

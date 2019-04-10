@@ -1,6 +1,8 @@
 ﻿using EOls.Serialization.Tests.Models;
+using EOls.Serialization.Tests.Services;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System.Collections.Generic;
 
 namespace EOls.Serialization.Tests
@@ -8,21 +10,22 @@ namespace EOls.Serialization.Tests
     [TestClass]
     public class JsonWriterConverterTests
     {
+        private static JsonSerializerSettings _jsonSettings;
         private CarCompany _carCompany;
 
         [ClassInitialize]
         public static void ClassInit(TestContext testContext)
         {
-            JsonConvert.DefaultSettings = () => new JsonSerializerSettings
+            _jsonSettings = new JsonSerializerSettings
             {
-                Converters = new[] { new TargetsJsonConverter() }
-            };
+                ContractResolver = new ContractResolver(new TestCacheService())
+            };            
         }
 
         [TestInitialize]
         public void TestInitialize()
-        {
-            _carCompany = new CarCompany
+        {            
+               _carCompany = new CarCompany
             {
                 Cars = new[] {
                     new Car
@@ -43,28 +46,28 @@ namespace EOls.Serialization.Tests
         [TestMethod]
         public void Converter_Should_Result_Valid_Json()
         {
-            var json = JsonConvert.SerializeObject(_carCompany);
-            var obj = JsonConvert.DeserializeObject<dynamic>(json);
+            var json = JsonConvert.SerializeObject(_carCompany, _jsonSettings);
+            var obj = JsonConvert.DeserializeObject<JObject>(json);
 
-            Assert.AreEqual("Saab", obj.Cars[0].Brand.ToString());
+            Assert.AreEqual("Saab", obj["cars"][0]["brand"].ToString());
         }
 
         [TestMethod]
         public void CarConverter_Should_Transform_To_Volvo()
         {
-            var json = JsonConvert.SerializeObject(_carCompany);
-            var obj = JsonConvert.DeserializeObject<dynamic>(json);
+            var json = JsonConvert.SerializeObject(_carCompany, _jsonSettings);
+            var obj = JsonConvert.DeserializeObject<JObject>(json);
 
-            Assert.AreEqual("bar", obj.Cars[0].C.ToString());
+            Assert.AreEqual("bar", obj["cars"][0]["c"].ToString());
         }
 
         [TestMethod]
         public void CarConverter_Should_Transform_To_Volvo_But_Keep_Newtonsoft_Setting()
         {
-            var json = JsonConvert.SerializeObject(_carCompany);
-            var obj = JsonConvert.DeserializeObject<dynamic>(json);
+            var json = JsonConvert.SerializeObject(_carCompany, _jsonSettings);
+            var obj = JsonConvert.DeserializeObject<JObject>(json);
 
-            Assert.AreEqual("foo", obj.Cars[0].B.ToString());
+            Assert.AreEqual("foo", obj["cars"][0]["b"].ToString());
         }
 
         [TestMethod]
@@ -80,10 +83,10 @@ namespace EOls.Serialization.Tests
                 {
                     { "B", new ModelA { Foo = "will get removed" } }
                 }
-            });
+            }, _jsonSettings);
 
-            var obj = JsonConvert.DeserializeObject<dynamic>(json);
-            Assert.AreEqual("Converted", obj.DictTest2.B.ToString());
+            var obj = JsonConvert.DeserializeObject<JObject>(json);
+            Assert.AreEqual("Converted", obj["dictTest2"]["b"].ToString());
         }
 
         [TestMethod]
@@ -99,10 +102,10 @@ namespace EOls.Serialization.Tests
                 {
                     { "B", new KeyValuePair<string, object>("Test", new ModelA { Foo = "will get removed" }) }
                 }
-            });
+            }, _jsonSettings);
             
-            var obj = JsonConvert.DeserializeObject<dynamic>(json);
-            Assert.AreEqual("Converted", obj.DictTest2.B.Value.ToString());
+            var obj = JsonConvert.DeserializeObject<JObject>(json);
+            Assert.AreEqual("Converted", obj["dictTest2"]["b"]["value"].ToString());
         }
 
         [TestMethod]
@@ -114,10 +117,10 @@ namespace EOls.Serialization.Tests
                 {
                     { "A", new { Test = new List<ModelA> { new ModelA { Foo = "will get removed" } } } }
                 }
-            });
+            }, _jsonSettings);
 
-            var obj = JsonConvert.DeserializeObject<dynamic>(json);
-            Assert.AreEqual("Converted", obj.Enumerable.A.Test[0].ToString());
+            var obj = JsonConvert.DeserializeObject<JObject>(json);
+            Assert.AreEqual("Converted", obj["enumerable"]["a"]["test"][0].ToString());
         }
 
         [TestMethod]
@@ -127,11 +130,11 @@ namespace EOls.Serialization.Tests
             {
                 Test = new ModelB { Bar = "Should be converted to ModelA then to string" },
                 Test2 = new [] { new ModelB { Bar = "Should be converted" } }
-            });
+            }, _jsonSettings);
 
-            var obj = JsonConvert.DeserializeObject<dynamic>(json);
-            Assert.AreEqual("Converted", obj.Test.ToString());
-            Assert.AreEqual("Converted", obj.Test2[0].ToString());
+            var obj = JsonConvert.DeserializeObject<JObject>(json);
+            Assert.AreEqual("Converted", obj["test"].ToString());
+            Assert.AreEqual("Converted", obj["test2"][0].ToString());
         }
     }
 }

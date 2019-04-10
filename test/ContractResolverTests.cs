@@ -11,16 +11,30 @@ namespace EOls.Serialization.Tests
 {
     [TestClass]
     public class ContractResolverTests
-    {        
+    {
+        private static JsonSerializerSettings _jsonSettings;
+
+        [ClassInitialize]
+        public static void ClassInit(TestContext testContext)
+        {
+            _jsonSettings = new JsonSerializerSettings
+            {
+                ContractResolver = new ContractResolver(new TestCacheService())
+            };
+        }
+
+        [TestInitialize]
+        public void TestInitialize()
+        {
+            ((ContractResolver)_jsonSettings.ContractResolver).ExtraOptInAttributes = new Type[0];
+        }
+
         [TestMethod]
         public void ContractResolver_Without_Custom_OptIn_Attributes_Should_Be_Null()
         {
             var model = new Foo { Bar = "bar", Test = "test" };
 
-            var json = JsonConvert.SerializeObject(model, new JsonSerializerSettings
-            {
-                ContractResolver = new ContractResolver(new TestCacheService())
-            });
+            var json = JsonConvert.SerializeObject(model, _jsonSettings);
             var obj = JsonConvert.DeserializeObject<dynamic>(json);
 
             Assert.IsNull(obj.bar);
@@ -31,13 +45,8 @@ namespace EOls.Serialization.Tests
         {
             var model = new Bar { Foo = "foo", Foobar = "test", Ignored = "ignored" };
 
-            var json = JsonConvert.SerializeObject(model, new JsonSerializerSettings
-            {
-                ContractResolver = new ContractResolver(new TestCacheService())
-                {
-                    ExtraOptInAttributes = new[] { typeof(DisplayAttribute) }
-                }
-            });
+            ((ContractResolver)_jsonSettings.ContractResolver).ExtraOptInAttributes = new[] { typeof(DisplayAttribute) };
+            var json = JsonConvert.SerializeObject(model, _jsonSettings);
             var obj = JsonConvert.DeserializeObject<JObject>(json);
             
             Assert.IsNotNull(obj["foo"]);
@@ -48,18 +57,14 @@ namespace EOls.Serialization.Tests
         public void ContractResolver_CacheAttribute_Should_Cache_Property()
         {
             var target = DateTime.Now.AddDays(-1);
-            var model = new Foo();
-            var settings = new JsonSerializerSettings
-            {
-                ContractResolver = new ContractResolver(new TestCacheService())
-            };
+            var model = new Foo();            
 
-            var json1 = JsonConvert.SerializeObject(model, settings);
+            var json1 = JsonConvert.SerializeObject(model, _jsonSettings);
             var obj1 = JsonConvert.DeserializeObject<dynamic>(json1);
 
             Thread.Sleep(1000);
 
-            var json2 = JsonConvert.SerializeObject(model, settings);
+            var json2 = JsonConvert.SerializeObject(model, _jsonSettings);
             var obj2 = JsonConvert.DeserializeObject<dynamic>(json2);
 
             Assert.AreNotEqual(obj1.noCacheDate, obj2.noCacheDate);
