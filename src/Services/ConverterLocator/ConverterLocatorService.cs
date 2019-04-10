@@ -1,8 +1,8 @@
-﻿using EOls.Serialization.Services.Reflection;
+﻿using JsonContractSimplifier.Services.Reflection;
 using System;
 using System.Linq;
 
-namespace EOls.Serialization.Services.ConverterLocator
+namespace JsonContractSimplifier.Services.ConverterLocator
 {
     public class ConverterLocatorService : IConverterLocatorService
     {

@@ -3,9 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.28307.136
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EOls.Serialization", "src\EOls.Serialization.csproj", "{0F6EE2DC-3D30-4F9F-9797-42CC0594E594}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JsonContractSimplifier", "src\JsonContractSimplifier.csproj", "{0F6EE2DC-3D30-4F9F-9797-42CC0594E594}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EOls.Serialization.Tests", "test\EOls.Serialization.Tests.csproj", "{D8649373-BA42-432F-9904-2E905E17D26A}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JsonContractSimplifier.Tests", "test\JsonContractSimplifier.Tests.csproj", "{D8649373-BA42-432F-9904-2E905E17D26A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

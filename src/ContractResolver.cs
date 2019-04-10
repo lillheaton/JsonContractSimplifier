@@ -1,7 +1,7 @@
-﻿using EOls.Serialization.Attributes;
-using EOls.Serialization.Services.Cache;
-using EOls.Serialization.Services.ConverterLocator;
-using EOls.Serialization.ValueProviders;
+﻿using JsonContractSimplifier.Attributes;
+using JsonContractSimplifier.Services.Cache;
+using JsonContractSimplifier.Services.ConverterLocator;
+using JsonContractSimplifier.ValueProviders;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using System;
@@ -9,7 +9,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 
-namespace EOls.Serialization
+namespace JsonContractSimplifier
 {
     public class ContractResolver : DefaultContractResolver
     {

@@ -1,9 +1,9 @@
-﻿using EOls.Serialization.Services.ConverterLocator;
+﻿using JsonContractSimplifier.Services.ConverterLocator;
 using Newtonsoft.Json;
 using System;
 using System.Collections;
 
-namespace EOls.Serialization
+namespace JsonContractSimplifier
 {
     public class TargetsJsonConverter : JsonConverter
     {

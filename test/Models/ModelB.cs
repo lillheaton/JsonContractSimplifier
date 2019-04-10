@@ -1,4 +1,4 @@
-﻿namespace EOls.Serialization.Tests.Models
+﻿namespace JsonContractSimplifier.Tests.Models
 {
     public class ModelB
     {

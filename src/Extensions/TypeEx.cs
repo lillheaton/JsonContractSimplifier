@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq;
 
-namespace EOls.Serialization
+namespace JsonContractSimplifier
 {
     public static class TypeEx
     {

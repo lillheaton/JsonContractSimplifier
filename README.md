@@ -1,13 +1,14 @@
-[![Build status](https://ci.appveyor.com/api/projects/status/0o92jsl3gutgi2lu?svg=true)](https://ci.appveyor.com/project/lillheaton/eols-serialization)
-[![NuGet](https://img.shields.io/nuget/v/EOls.Serialization.svg)](https://www.nuget.org/packages/EOls.Serialization/)
+[![Build status](https://ci.appveyor.com/api/projects/status/wx2hg990jha97yx7?svg=true)](https://ci.appveyor.com/project/lillheaton/jsoncontractsimplifier)
+
+[![NuGet](https://img.shields.io/nuget/v/JsonContractSimplifier.svg)](https://www.nuget.org/packages/JsonContractSimplifier/)
 
 
-# Eols.Serialization
+# JsonContractSimplifier
 A shorthand tool built on top of Newtonsoft [Json.NET](https://www.newtonsoft.com/json) that allows you to transform specific types during serialization. 
 It builds on top of the default JsonConverter as well as the DefaultContractResolver.
 
 ### Installation
-    PM> Install-Package EOls.Serialization
+    PM> Install-Package JsonContractSimplifier
 
 ### Usage
 
@@ -16,8 +17,7 @@ It builds on top of the default JsonConverter as well as the DefaultContractReso
 ```C#
 var json = JsonConvert.SerializeObject(yourObject, new JsonSerializerSettings
 {
-    ContractResolver = new ContractResolver() { ShouldCache = false },
-    Converters = new[] { new TargetsJsonConverter() }
+    ContractResolver = new ContractResolver() { ShouldCache = false }
 });
 
 ```

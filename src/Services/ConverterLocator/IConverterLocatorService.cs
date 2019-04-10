@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace EOls.Serialization.Services.ConverterLocator
+namespace JsonContractSimplifier.Services.ConverterLocator
 {
     public interface IConverterLocatorService
     {

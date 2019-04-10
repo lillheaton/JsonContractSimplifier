@@ -11,8 +11,8 @@ export default function setVersion(version) {
     )
     .then(
       updateFile(
-        'Updating EOls.Serialization.csproj version',
-        './EOls.Serialization/EOls.Serialization.csproj',
+        'Updating JsonContractSimplifier.csproj version',
+        './JsonContractSimplifier/JsonContractSimplifier.csproj',
         data =>
           data.replace(
             /<VersionPrefix>(.*)<\/VersionPrefix>/,

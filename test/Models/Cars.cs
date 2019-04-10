@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace EOls.Serialization.Tests.Models
+namespace JsonContractSimplifier.Tests.Models
 {
     public class CarCompany
     {

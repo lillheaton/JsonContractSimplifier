@@ -1,11 +1,11 @@
-﻿using EOls.Serialization.Tests.Models;
-using EOls.Serialization.Tests.Services;
+﻿using JsonContractSimplifier.Tests.Models;
+using JsonContractSimplifier.Tests.Services;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System.Collections.Generic;
 
-namespace EOls.Serialization.Tests
+namespace JsonContractSimplifier.Tests
 {
     [TestClass]
     public class JsonWriterConverterTests

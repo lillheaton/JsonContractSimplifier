@@ -14,7 +14,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\src\EOls.Serialization.csproj" />
+    <ProjectReference Include="..\src\JsonContractSimplifier.csproj" />
   </ItemGroup>
 
 </Project>

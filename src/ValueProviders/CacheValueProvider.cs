@@ -1,13 +1,13 @@
-﻿using EOls.Serialization.Attributes;
-using EOls.Serialization.Services.Cache;
+﻿using JsonContractSimplifier.Attributes;
+using JsonContractSimplifier.Services.Cache;
 using Newtonsoft.Json.Serialization;
 using System.Reflection;
 
-namespace EOls.Serialization.ValueProviders
+namespace JsonContractSimplifier.ValueProviders
 {
     public class CacheValueProvider : IValueProvider
     {
-        private const string CACHE_KEY = "EOls.Serialization.Cache_{0}";
+        private const string CACHE_KEY = "JsonContractSimplifier.Cache_{0}";
 
         private readonly MemberInfo _memberInfo;
         private readonly IValueProvider _innerValueProvider;

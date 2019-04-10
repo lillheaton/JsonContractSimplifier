@@ -1,7 +1,7 @@
-﻿using EOls.Serialization.Services.ConverterLocator;
-using EOls.Serialization.Tests.Models;
+﻿using JsonContractSimplifier.Services.ConverterLocator;
+using JsonContractSimplifier.Tests.Models;
 
-namespace EOls.Serialization.Tests.Converters
+namespace JsonContractSimplifier.Tests.Converters
 {
     public class ModelAConverter : IObjectConverter<ModelA>
     {

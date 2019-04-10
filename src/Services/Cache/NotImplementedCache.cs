@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace EOls.Serialization.Services.Cache
+namespace JsonContractSimplifier.Services.Cache
 {
     public class NotImplementedCache : ICacheService
     {

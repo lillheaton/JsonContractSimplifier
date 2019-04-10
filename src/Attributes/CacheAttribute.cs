@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace EOls.Serialization.Attributes
+namespace JsonContractSimplifier.Attributes
 {
     [AttributeUsage(AttributeTargets.Property | AttributeTargets.Field | AttributeTargets.Class, AllowMultiple = false)]
     public class CacheAttribute : Attribute

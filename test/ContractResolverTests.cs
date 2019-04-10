@@ -1,5 +1,5 @@
-﻿using EOls.Serialization.Attributes;
-using EOls.Serialization.Tests.Services;
+﻿using JsonContractSimplifier.Attributes;
+using JsonContractSimplifier.Tests.Services;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -7,7 +7,7 @@ using System;
 using System.ComponentModel.DataAnnotations;
 using System.Threading;
 
-namespace EOls.Serialization.Tests
+namespace JsonContractSimplifier.Tests
 {
     [TestClass]
     public class ContractResolverTests

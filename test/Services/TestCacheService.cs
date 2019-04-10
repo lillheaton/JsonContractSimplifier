@@ -1,9 +1,9 @@
-﻿using EOls.Serialization.Services.Cache;
+﻿using JsonContractSimplifier.Services.Cache;
 using System;
 using System.Collections.Generic;
 using System.Runtime.Caching;
 
-namespace EOls.Serialization.Tests.Services
+namespace JsonContractSimplifier.Tests.Services
 {
     public class TestCacheService : ICacheService
     {

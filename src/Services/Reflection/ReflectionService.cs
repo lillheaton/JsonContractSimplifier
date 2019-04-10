@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 
-namespace EOls.Serialization.Services.Reflection
+namespace JsonContractSimplifier.Services.Reflection
 {
     public static class ReflectionService
     {
