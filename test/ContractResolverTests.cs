@@ -71,6 +71,21 @@ namespace JsonContractSimplifier.Tests
             Assert.AreEqual(obj1.cacheDate, obj2.cacheDate);
         }
 
+        [TestMethod]
+        public void JsonIgnore_Override_All_Extra_OptIn_Attributes()
+        {
+            var model = new Bar
+            {
+                MultiAttributes = "A dummy value"
+            };
+
+            ((ContractResolver)_jsonSettings.ContractResolver).ExtraOptInAttributes = new[] { typeof(DisplayAttribute) };
+            var json = JsonConvert.SerializeObject(model, _jsonSettings);
+            var obj = JsonConvert.DeserializeObject<JObject>(json);
+
+            Assert.IsNull(obj["multiAttributes"]);
+        }
+
         [JsonObject(MemberSerialization.OptIn)]
         internal class Foo
         {
@@ -98,6 +113,10 @@ namespace JsonContractSimplifier.Tests
             public string Foobar { get; set; }
             
             public string Ignored { get; set; }            
+
+            [Display]
+            [JsonIgnore]
+            public string MultiAttributes { get; set; }
         }
     }
 }

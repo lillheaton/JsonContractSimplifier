@@ -76,9 +76,17 @@ namespace JsonContractSimplifier
                 return jsonProperty.Ignored;
 
             if (memberSerialization == MemberSerialization.OptIn && jsonProperty.Ignored)
-            {                
-                return !jsonProperty.AttributeProvider
-                    .GetAttributes(false)
+            {
+                var attributes = jsonProperty
+                    .AttributeProvider
+                    .GetAttributes(false);
+                
+                if(attributes.Any(attr => attr.GetType() == typeof(JsonIgnoreAttribute)))
+                {
+                    return jsonProperty.Ignored;
+                }
+                
+                return !attributes
                     .Any(attr => 
                         ExtraOptInAttributes.Any(x => attr.GetType().Equals(x))
                     );
