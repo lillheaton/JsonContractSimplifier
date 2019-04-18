@@ -7,8 +7,9 @@ namespace JsonContractSimplifier.ValueProviders
 {
     public class CacheValueProvider : IValueProvider
     {
-        private const string CACHE_KEY = "JsonContractSimplifier.Cache_{0}";
+        private const string ROOT_CACHE_KEY = "JsonContractSimplifier.Cache_{0}";
 
+        private readonly string _cacheKey;
         private readonly MemberInfo _memberInfo;
         private readonly IValueProvider _innerValueProvider;
         private readonly ICacheService _cacheService;
@@ -21,21 +22,20 @@ namespace JsonContractSimplifier.ValueProviders
             _memberInfo = memberInfo;
             _innerValueProvider = valueProvider;
             _cacheService = cacheService;
+
+            _cacheKey = string.Format(ROOT_CACHE_KEY, $"{_memberInfo.DeclaringType.ToString()}_{_memberInfo.Name}");
         }        
-
-        private string GetCacheKey() =>
-            string.Format(CACHE_KEY, $"{_memberInfo.DeclaringType.ToString()}_{_memberInfo.Name}");
-
+        
         public object GetValue(object target)
         {
             var prop = target.GetType().GetProperty(_memberInfo.Name);
-            var cacheAttribute = prop.GetCustomAttribute<CacheAttribute>();
+            var cacheAttribute = prop.GetCustomAttribute<JsonCacheGetterAttribute>();
 
             if (cacheAttribute == null)
                 return _innerValueProvider.GetValue(target);            
 
             return _cacheService.HandleCache<object>(
-                GetCacheKey(),
+                _cacheKey,
                 cacheAttribute.CacheTime,
                 () =>
                 {

@@ -1,7 +1,6 @@
 ﻿using JsonContractSimplifier.Services.ConverterLocator;
 using Newtonsoft.Json;
 using System;
-using System.Collections;
 
 namespace JsonContractSimplifier
 {
@@ -14,8 +13,8 @@ namespace JsonContractSimplifier
         {
             _converter = converter;
             _converterLocatorService = converterLocatorService;
-        }        
-            
+        }
+
         public override bool CanConvert(Type objectType)
         {
             var converterType = _converter.GetType();
@@ -24,31 +23,17 @@ namespace JsonContractSimplifier
 
         public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
         {
-            Type targetType = value.GetType();            
-            object result = _converterLocatorService.Convert(value, _converter);
-            Type resultType = result.GetType();
+            object convertedValue = _converterLocatorService.Convert(value, _converter);
+            Type convertedValueType = convertedValue.GetType();
 
-            switch (resultType)
+            if (convertedValueType.IsValueType || convertedValueType == typeof(string))
             {
-                case object _ when resultType.IsValueType || resultType == typeof(string):
-                    writer.WriteValue(result);
-                    break;
-
-                case IEnumerable enumerable
-                when targetType.IsArray || (targetType.IsGenericType && result is IEnumerable):
-                    writer.WriteStartArray();
-                    serializer.Serialize(writer, enumerable);
-                    writer.WriteEndArray();
-                    break;
-
-                case object _ when resultType.IsClass:
-                    serializer.Serialize(writer, result);
-                    break;
-
-                default:
-                    serializer.Serialize(writer, result);                    
-                    break;
-            }            
+                writer.WriteValue(convertedValue);
+            }
+            else
+            {
+                serializer.Serialize(writer, convertedValue);
+            }
         }
 
         #region JsonRead

@@ -50,7 +50,7 @@ namespace JsonContractSimplifier
             if (!ShouldCache)
                 return jsonProperty.ValueProvider;
 
-            var cacheAttribute = memberInfo.GetCustomAttribute<CacheAttribute>(false);
+            var cacheAttribute = memberInfo.GetCustomAttribute<JsonCacheGetterAttribute>(false);
             if (cacheAttribute != null)
                 return new CacheValueProvider(memberInfo, jsonProperty.ValueProvider, _cacheService);
 
@@ -96,7 +96,7 @@ namespace JsonContractSimplifier
         }
         
         protected override JsonProperty CreateProperty(MemberInfo member, MemberSerialization memberSerialization)
-        {
+        {            
             var jsonProperty = base.CreateProperty(member, memberSerialization);
             jsonProperty.Ignored = ShouldIgnore(jsonProperty, member, memberSerialization);
             jsonProperty.ValueProvider = GetValueProvider(jsonProperty, member);

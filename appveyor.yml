@@ -3,7 +3,6 @@ pull_requests:
   do_not_increment_build_number: true
 skip_tags: true
 skip_branch_with_pr: false
-test: off
 
 os: Visual Studio 2017
 

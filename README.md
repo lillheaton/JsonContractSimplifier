@@ -1,5 +1,4 @@
 [![Build status](https://ci.appveyor.com/api/projects/status/wx2hg990jha97yx7?svg=true)](https://ci.appveyor.com/project/lillheaton/jsoncontractsimplifier)
-
 [![NuGet](https://img.shields.io/nuget/v/JsonContractSimplifier.svg)](https://www.nuget.org/packages/JsonContractSimplifier/)
 
 
@@ -43,7 +42,7 @@ This attribute allows you to cache that specific property for X time.
 ```C#
 public class Foo
 {
-    [Cache("00:01")]    
+    [JsonCacheGetter("00:01")]    
     public DateTime CacheDate { get => DateTime.Now; }
 }
 
